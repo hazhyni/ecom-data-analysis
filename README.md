@@ -1,6 +1,6 @@
 # Brazilian E-Commerce Public Dataset Data Analysis
 
-Resources: [![Kaggle](https://www.kaggle.com/static/images/site-logo.svg)](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce)
+Resources: [![Kaggle](https://www.kaggle.com/static/images/site-logo.svg){width:300px}](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce)
 
 Welcome to Hazhiyah Yumni's Data Analysis X Dicoding Indonesia! This App will help you to know business improvement according to the data provided.
 
