@@ -1,1 +1,1 @@
-# ecom-data-analysis
+# Brazilian E-Commerce Public Dataset
