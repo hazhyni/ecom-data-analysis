@@ -59,16 +59,12 @@ long_data = visual_data.melt(id_vars='month',
                               var_name='year', 
                               value_name='sales')
 
-
 # Dropdown untuk memilih tahun
 selected_year = st.selectbox("Pilih Tahun:", [2016, 2017, 2018])
 
 # Ambil kolom penjualan untuk tahun yang dipilih
 sales_column = f'sales_{selected_year}'
 full_data = visual_data[['month', sales_column]]
-
-# Ganti NaN dengan 0 (jika ada)
-full_data[sales_column] = full_data[sales_column].fillna(0)
 
 # Atur bulan sebagai kategori untuk memastikan urutan yang benar
 full_data['month'] = pd.Categorical(full_data['month'], categories=[
@@ -79,34 +75,26 @@ full_data['month'] = pd.Categorical(full_data['month'], categories=[
 st.line_chart(full_data.set_index('month')[sales_column])
 
 
-
-# Ubah data ke format long untuk visualisasi
+# Mengubah data ke format long untuk visualisasi
 long_data = visual_data.melt(id_vars='month', 
                               value_vars=['sales_2016', 'sales_2017', 'sales_2018'],
                               var_name='year', 
                               value_name='sales')
 
-# Ganti nama tahun untuk kemudahan
-long_data['year'] = long_data['year'].str.replace('sales_', '')
-
-# Atur bulan sebagai kategori untuk memastikan urutan yang benar
+# Mengatur bulan sebagai kategori untuk memastikan urutan yang benar
 long_data['month'] = pd.Categorical(long_data['month'], categories=[
     'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
     'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'], ordered=True)
 
-# Filter data to start from January
-long_data = long_data[long_data['month'].isin(['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
-                                                'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'])]
-
-# Buat chart menggunakan Altair
+# Membuat chart garis
 chart = alt.Chart(long_data).mark_line(point=True).encode(
-    x=alt.X('month:O', title='Bulan', sort=alt.SortOrder('ascending')), 
-    y=alt.Y('sales:Q', title='Penjualan', scale=alt.Scale(domain=[0, long_data['sales'].max() * 1.1])),
+    x=alt.X('month:O', title='Bulan', sort=['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']),
+    y=alt.Y('sales:Q', title='Penjualan'),
     color='year:N',
     tooltip=['month', 'year', 'sales']
 ).properties(
-    title='Penjualan Bulanan untuk Tahun 2016, 2017, dan 2018'
+    title='Penjualan Bulanan'
 )
 
-# Tampilkan chart
+# Menampilkan chart di Streamlit
 st.altair_chart(chart, use_container_width=True)
