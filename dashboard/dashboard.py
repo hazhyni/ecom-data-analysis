@@ -28,23 +28,9 @@ add_selectbox = st.sidebar.selectbox(
 
 # Show section to view and edit existing tickets in a table.
 st.header("Sales Trend Over Time")
-st.write(f"Data Required: `orders.csv`, `order_items.csv`, `order_payments.csv`, `order_reviews.csv`, `products.csv`, `sellers.csv`, `customers.csv`, `geolocation")
+st.write(f"Data Required: `orders.csv`, `order_items.csv`, `order_payments.csv`, `order_reviews.csv`, `products.csv`, `sellers.csv`, `customers.csv`, `geolocation.csv`")
 st.info(
     "As an analyst, We need to know more about sales trends and their total revenue to make the right decisions. Here's our clean and structured data to analyze.")
-
-def load_data(url):
-    df = pd.read_csv(url)  # 👈 Download the data
-    return df
-
-df = load_data(
-    "data/visual1.csv")
-st.dataframe(df)
-# Generate data
-chart_data = pd.DataFrame({
-                          "Harga": df["price"],
-                          "Tahun": df["order_id"]})
-st.line_chart(chart_data, x="Tahun", y="Harga")
-
 
 def load_data(url):
     visual_data = pd.read_csv(url)  # �� Download the data
@@ -98,3 +84,35 @@ chart = alt.Chart(long_data).mark_line(point=True).encode(
 
 # Menampilkan chart di Streamlit
 st.altair_chart(chart, use_container_width=True)
+
+
+
+
+st.header('Top 10 Product Revenue')
+
+def load_data(url):
+    visual_data2 = pd.read_csv(url)  # �� Download the data
+    return visual_data2
+
+visual_data2 = load_data("data/top10revenue.csv")
+
+# Streamlit app
+st.title('Product Categories and Prices')
+
+# Display the DataFrame
+st.write("Here is the data:")
+st.dataframe(visual_data2)
+
+st.subheader('Bar Chart of Product Categories and Prices')
+st.bar_chart(visual_data2.set_index('product_category_name')['price'])
+
+
+st.header('Most Used Payment Methods')
+def load_data(url):
+    visual_data3 = pd.read_csv(url)
+    return visual_data3
+visual_data3 = load_data("data/payment_counts.csv")
+
+st.bar_chart(visual_data3.set_index('payment_type')['count'])  # Display the bar chart
+
+# st.pie_chart(df.set_index('payment_type')['count'])
