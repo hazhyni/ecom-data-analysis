@@ -4,6 +4,7 @@ import altair as alt
 import numpy as np
 import pandas as pd
 import streamlit as st
+import plotly.express as px
 import folium as folium
 from io import StringIO
 
@@ -87,7 +88,7 @@ chart = alt.Chart(long_data).mark_line(point=True).encode(
 st.altair_chart(chart, use_container_width=True)
 
 
-
+# QUESTTION 3
 
 st.header('Top 10 Product Revenue')
 
@@ -107,7 +108,7 @@ st.dataframe(visual_data2)
 st.subheader('Bar Chart of Product Categories and Prices')
 st.bar_chart(visual_data2.set_index('product_category_name')['price'])
 
-
+# QUESTION 3
 st.header('Most Used Payment Methods')
 def load_data(url):
     visual_data3 = pd.read_csv(url)
@@ -115,9 +116,23 @@ def load_data(url):
 visual_data3 = load_data("data/payment_counts.csv")
 
 st.bar_chart(visual_data3.set_index('payment_type')['count'])  # Display the bar chart
+# data3 = st.dataframe(visual_data3.set_index('payment_type')['count'])
 
-# st.pie_chart(df.set_index('payment_type')['count'])
+# Buat DataFrame dari data
+df = pd.DataFrame(visual_data3)
 
+# Step 2: Buat Chart Pie
+fig = px.pie(df, 
+             values='count', 
+             names='payment_type', 
+             title='Distribusi Tipe Pembayaran',
+             )  # Menampilkan persentase dan label
+
+# Step 3: Tampilkan Chart di Streamlit
+st.title('Distribusi Tipe Pembayaran')
+st.plotly_chart(fig)
+
+# QUESTION 4
 def load_data(url):
     mapdata = pd.read_csv(url)
     return mapdata
