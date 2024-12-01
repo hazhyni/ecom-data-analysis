@@ -4,6 +4,7 @@ import altair as alt
 import numpy as np
 import pandas as pd
 import streamlit as st
+import folium as folium
 from io import StringIO
 
 # Show app title and description.
@@ -116,3 +117,25 @@ visual_data3 = load_data("data/payment_counts.csv")
 st.bar_chart(visual_data3.set_index('payment_type')['count'])  # Display the bar chart
 
 # st.pie_chart(df.set_index('payment_type')['count'])
+
+def load_data(url):
+    mapdata = pd.read_csv(url)
+    return mapdata
+mapdata = load_data("data/geolocation_dataset.csv")
+st.dataframe(mapdata)
+
+# st.map(data=mapdata, latitude=mapdata['geolocation_lat'], longitude=mapdata['geolocation_lng'], use_container_width=True)
+# DEFAULT MAP STREAMLIT
+df = pd.DataFrame(
+    mapdata,
+    columns=["lat", "lon"],
+)
+st.map(df)
+
+def load_data(url):
+    visual_data4 = pd.read_csv(url)
+    return visual_data4
+visual_data4 = load_data("data/avg_delivery_time_state.csv")
+st.dataframe(visual_data4)
+
+
