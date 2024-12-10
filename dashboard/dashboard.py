@@ -19,19 +19,19 @@ st.write(
 # :shopping_bags: Brazilian E-Commerce Public Dataset by Olist
 
 **Welcome to Hazhiyah Yumni's Data Analysis X Dicoding Indonesia!**
-Dashboard that will help you to know business improvement according to the data provided.
+Informational dashboard that will help you to know business improvement according to the data provided. 😉
 """
 )
 
 # Dashboard sidebar
 with st.sidebar:
     selected = option_menu(
-        menu_title = "Question Menu",
-        options = ["Pertanyaan 1", "Pertanyaan 2", "Pertanyaan 3", "Pertanyaan 4", "Pertanyaan 5"]
+        menu_title = "Dashboard",
+        options = ["Sales Trend", "Top Product Revenue", "Top Payment Method", "Delivery Time & Map", "Negative Review on Sales"]
     )
 
 # ------------------------------------------ QUESTION 1------------------------------
-if selected == "Pertanyaan 1":
+if selected == "Sales Trend":
     st.title('Q1: Sales Trend Over Time')
     st.write("Pertanyaan 1: Bagaimana tren penjualan tiap tahunnya?")
     st.info(
@@ -117,7 +117,7 @@ if selected == "Pertanyaan 1":
     st.line_chart(full_data.loc[:, sales_column])
 
 # -------------------------------------- QUESTION 2 ----------------------------------------------------------
-if selected == "Pertanyaan 2":
+if selected == "Top Product Revenue":
     st.title('Q2: Top 10 Product Revenue')
     st.write("Apa saja jenis produk yang paling banyak terjual?")
     st.info("Bagaimana dengan produk yang dijual? Produk apa saja yang paling laris dalam beberapa tahun ini? Berikut adalah jenis produk yang paling laris:")
@@ -148,7 +148,7 @@ if selected == "Pertanyaan 2":
     st.bar_chart(visual_data2.set_index('product_category_name')['price'])
 
 # ------------------------------------------QUESTION 3--------------------------------------------------------
-if selected == "Pertanyaan 3":
+if selected == "Top Payment Method":
     st.title('Q3: Most Used Payment Methods')
     st.write("Apa saja jenis metode pembayaran yang paling sering digunakan pengguna dalam bertransaksi?")
     st.info("Sekarang kita sudah mengetahui jenis produk yang paling laris, lalu metode pembayaran apa yang paling sering digunakan pengguna untuk bertransaksi?")
@@ -173,18 +173,29 @@ if selected == "Pertanyaan 3":
 
 
 # QUESTION 4
-if selected == "Pertanyaan 4":
+if selected == "Delivery Time & Map":
     st.title("Q4: E-commerece Delivery Services")
     st.write("Berapa lama rata - rata waktu pengiriman produk ke pelanggan dan di provinsi mana saja produk dijualkan?")
     st.info("Peta di bawah ini menggambarkan lokasi pengantaran produk untuk mengetahui kondisi geografis pengguna e-commerce")
-
+    
     @st.cache_data
+    def load_data(url):
+        listdata4 = pd.read_csv(url)
+        return listdata4
+    listdata4 = load_data('data/delivery_time_result.csv')
+    listdata4 = listdata4.loc[:, ['customer_zip_code_prefix','customer_state_x', 'customer_city', 'avg_delivery_time_days']]
+    listdata4 = listdata4.rename(columns={
+        'customer_zip_code_prefix': 'ZIP Code',
+        'customer_state_x': 'State Code',
+        'customer_city': 'City Name',
+        'avg_delivery_time_days': 'Waktu Pengiriman (menit)'
+    })
+    st.dataframe(listdata4, use_container_width=True)
+    
     def load_data(url):
         mapdata = pd.read_csv(url)
         return mapdata
     mapdata = load_data("data/delivery_location_vis.csv")
-
-# st.dataframe(mapdata)
 
 # DEFAULT MAP STREAMLIT
     df = pd.DataFrame(
@@ -216,7 +227,7 @@ if selected == "Pertanyaan 4":
 
 
 # QUESTION 05
-if selected == "Pertanyaan 5":
+if selected == "Negative Review on Sales":
     st.title('Q5: Correlation of Sales and Negative Reviews')
     st.write("Apakah terdapat korelasi antara respon negatif pengguna terhadap penjualan produk?")
     st.info("Meskipun penjualan produk terus berlanjut, pihak pengelola juga perlu mengetahui bagaimana komentar/review negatif produk dapat mempengaruhi penjualan untuk menjaga reputasi e-commerce")
@@ -225,7 +236,7 @@ if selected == "Pertanyaan 5":
         visual_data5 = pd.read_csv(url)
         return visual_data5
     visual_data5 = load_data("data/correlation_vis.csv")
-# st.dataframe(visual_data5)
+    st.dataframe(visual_data5)
 
     fig = px.imshow(visual_data5)
     st.plotly_chart(fig)
