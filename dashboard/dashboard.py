@@ -188,7 +188,7 @@ if selected == "Delivery Time & Map":
         'customer_zip_code_prefix': 'ZIP Code',
         'customer_state_x': 'State Code',
         'customer_city': 'City Name',
-        'avg_delivery_time_days': 'Waktu Pengiriman (menit)'
+        'avg_delivery_time_days': 'Waktu Pengiriman (hari)'
     })
     st.dataframe(listdata4, use_container_width=True)
     
