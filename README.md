@@ -19,7 +19,7 @@ A simple Streamlit app showing an internal tool that lets you create, manage, an
 2. Run the app
 
    ```
-   $ streamlit run streamlit_app.py
+   $ streamlit run dashboard/dashboard.py
    ```
 3. Libraries requirement
 
