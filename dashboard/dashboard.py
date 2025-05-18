@@ -21,7 +21,7 @@ st.write(
 # :shopping_bags: Brazilian E-Commerce Public Dataset by Olist
 
 **Welcome to Hazhiyah Yumni's Data Analysis X Dicoding Indonesia!**
-Informational dashboard that will help you to know business improvement according to the data provided. 😉
+Informational dashboard that will help you to analyze e-commerce. 😉
 """
 )
 
@@ -50,7 +50,7 @@ if selected == "Dashboard":
     end_date = df["Tanggal"].max()
 
     selected_date_range = st.date_input(
-        "**Pilih rentang tanggal:**",
+        "**Choose Orders Range:**",
         value=(start_date, end_date),
         min_value=start_date,
         max_value=end_date,
@@ -78,11 +78,11 @@ if selected == "Dashboard":
             # Display the result with formatting (optional)
             with col1:
                 st.header(f"**Total Orders**")
-                st.info(f"{total_orders:.0f}")
+                st.info(f"{total_orders:.0f} Orders")
 
             with col2:
                 st.header(f"**Total Revenue**")
-                st.success(f"{total_revenue:,.2f}")
+                st.success(f"R$ {int(total_revenue):,}".replace(",","."))
                                     
             st.header(f"**Daily Sales**")
             # Group by date to calculate total sales per day
@@ -140,6 +140,8 @@ if selected == "Dashboard":
             st.plotly_chart(fig)
             
             st.header("**Best Customer Based on RFM Analysis**")
+            st.info("This dashboard presents RFM segmentation and geospatial analysis of a Brazilian e-commerce dataset to identify loyal customers and regional order trends.")
+
             col1, col2, col3 = st.columns(3)
         
             def load_data(url):
@@ -155,11 +157,12 @@ if selected == "Dashboard":
             ]
             
             # Menghitung rata-rata recency per hari
-            average_total_recency = filtered_df.groupby('last_order_date')['recency'].mean().reset_index()
-            total_recency_per_day = average_total_recency['recency'].sum()
+            average_total_recency = filtered_df.groupby('last_order_date')['recency'].sum().reset_index()
+            total_recency_per_day = average_total_recency['recency'].mean()
             with col1:
                 st.subheader("**Recency (Days)**")
-                st.info(f"{round(total_recency_per_day):.0f}")
+                formatted_value = f"{int(total_recency_per_day):,}".replace(",", ".")
+                st.info(f"{formatted_value} Hari")
 
                 customer_recency = filtered_df.groupby('customer_id')['recency'].sum().reset_index()
                 
@@ -170,6 +173,8 @@ if selected == "Dashboard":
                 figrec = px.bar(top_5_customers_rec, x='recency', y='customer_id', title='Recency Statistics')
                 figrec.update_layout(title_font_size=16, xaxis_title="Recency(Days)", yaxis_title="Customer ID")
                 st.plotly_chart(figrec)
+                
+                
 
             with col2:
                 st.subheader("**Frequency**")
@@ -189,9 +194,10 @@ if selected == "Dashboard":
 
                 # Hitung frekuensi transaksi per customer_id
                 customer_frequency = filtered_df.groupby('customer_id').size().reset_index(name='frequency')
-                total_frequency = customer_frequency['frequency'].sum()
-                st.info(f"{round(total_frequency):.0f}")
-
+                total_frequency = customer_frequency['frequency'].mean()
+                formatted_value = f"{int(total_frequency):,}".replace(",", ".")
+                st.info(f"{formatted_value} Pengguna")
+                
                 # Menghapus duplikat berdasarkan nilai frequency
                 unique_frequency = customer_frequency.drop_duplicates(subset='frequency')
 
@@ -227,7 +233,9 @@ if selected == "Dashboard":
 
                 average_total_monetary = filtered_df.groupby('purchase_date')['total_spent'].mean().reset_index()
                 total_monetary_per_day = average_total_monetary['total_spent'].sum()
-                st.info(f"{round(total_monetary_per_day):.0f}")
+                
+                formatted_value = f"{int(total_monetary_per_day):,}".replace(",", ".")
+                st.info(f"Rp. {formatted_value}")
                 
                 unique_monetary = monetary_data.drop_duplicates(subset='total_spent')
                 
@@ -248,9 +256,14 @@ if selected == "Dashboard":
         else:
             st.info("No data available for the selected date range.")
     else:
-        st.warning("Pilih rentang tanggal yang valid!")
+        st.warning("Please Choose Valid Date Range!")
     
-    
+    st.header("**Definition of RFM Analysis**")
+    st.info("RFM Analysis is a data-driven marketing technique used to evaluate and segment customers based on their purchasing behavior.")
+    st.markdown("""The acronym RFM stands for Recency, Frequency, and Monetary, which are three key metrics: 
+- Recency (R): How recently a customer made their last purchase. Customers who bought more recently are generally more engaged and likely to respond to marketing efforts.
+- Frequency (F): How often a customer has made purchases in a given time period. Frequent buyers are considered more loyal.
+- Monetary (M): How much money a customer has spent in total. High spenders are more valuable to the business.""")
     
 
 if selected == "Sales Trend":
